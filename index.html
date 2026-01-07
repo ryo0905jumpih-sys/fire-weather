@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>林野火災気象条件 自動判定（内部専用）</title>
+<style>
+body { font-family: sans-serif; margin: 30px; }
+.box { padding: 20px; border: 1px solid #ccc; max-width: 600px; }
+.l0 { background: #e8f5e9; }
+.l1 { background: #fffde7; }
+.l2 { background: #ffebee; }
+.result { font-size: 1.5em; font-weight: bold; }
+.small { font-size: 0.9em; color: #555; }
+</style>
+</head>
+<body>
+
+<h1>林野火災気象条件 自動判定（内部専用）</h1>
+
+<div id="box" class="box">読み込み中…</div>
+
+<script>
+fetch("data.json")
+.then(r => r.json())
+.then(d => {
+  const box = document.getElementById("box");
+  box.classList.add("l" + d.level);
+  box.innerHTML = `
+    <div class="result">判定結果：${d.result}</div>
+    <ul>
+      <li>前3日間降水量：${d.rain3} mm</li>
+      <li>前30日間降水量：${d.rain30} mm</li>
+      <li>乾燥注意報：${d.dry ? "発表中" : "なし"}</li>
+      <li>強風注意報：${d.wind ? "発表中" : "なし"}</li>
+    </ul>
+    <div class="small">
+      最終更新：${d.updated}<br>
+      ※内部判断補助用
+    </div>
+  `;
+});
+</script>
+
+</body>
+</html>
