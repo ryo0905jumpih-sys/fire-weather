@@ -1,0 +1,23 @@
+name: Fire Weather Auto Update
+
+on:
+  schedule:
+    - cron: '30 23 * * *'  # 日本時間 8:30
+  workflow_dispatch:
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install requests
+      - run: python judge.py
+      - run: |
+          git config --global user.name "auto-bot"
+          git config --global user.email "auto@example.com"
+          git add data.json history.csv
+          git commit -m "auto update" || echo "no change"
+          git push
